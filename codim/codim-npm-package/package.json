@@ -1,0 +1,14 @@
+{
+  "name": "testim",
+  "version": "3.0.5",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prepare": "npx tsc --types node --declaration index.ts"
+  },
+  "author": "Testim Developers",
+  "license": "Proprietary",
+  "devDependencies": {
+    "typescript": "4.6.2"
+  }
+}

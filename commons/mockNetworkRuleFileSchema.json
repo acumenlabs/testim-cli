@@ -1,0 +1,138 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "request": {
+            "type": "object",
+            "required": ["url"],
+            "additionalProperties": false,
+            "properties": {
+                "url": { "type": "string" },
+                "method": {
+                    "type": "string",
+                    "pattern": "^GET$|^HEAD$|^POST$|^PUT$|^DELETE$|^CONNECT$|^OPTIONS$|^TRACE$|^PATCH$"
+                }
+            }
+        },
+
+        "header": {
+            "type": "object",
+            "required": [
+                "name",
+                "value"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
+        "cookie": {
+            "type": "object",
+            "required": [
+                "name",
+                "value"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "domain": {
+                    "type": "string"
+                },
+                "expires": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "httpOnly": {
+                    "type": "boolean"
+                },
+                "secure": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "response": {
+            "type": "object",
+            "required": ["status"],
+            "additionalProperties": false,
+            "properties": {
+                "status": {
+                    "type": "integer",
+                    "minimum": 100,
+                    "exclusiveMaximum": 600
+                },
+                "headers": {
+                    "type": "array",
+                    "items": { "$ref": "#/definitions/header" }
+                },
+                "cookies": {
+                    "type": "array",
+                    "items": { "$ref": "#/definitions/cookie" }
+                },
+                "content": {
+                    "type": "object",
+                    "required": ["text"],
+                    "additionalProperties": false,
+                    "properties": {
+                        "text": {
+                            "type": "string"
+                        }
+                }
+            }
+        }
+    },
+    "redirectResponse": {
+        "type": "object",
+        "required": ["redirectUrl"],
+        "additionalProperties": false,
+        "properties": {
+            "redirectUrl": { "type": "string" }
+        }
+    },
+    "passthroughResponse": {
+        "type": "object",
+        "required": ["passthrough"],
+        "additionalProperties": false,
+        "properties": {
+            "passthrough": { "type": "boolean", "enum": [ true ] }
+        }
+    },
+
+    "entry": {
+        "type": "object",
+        "required": ["request", "response"],
+        "additionalProperties": false,
+        "properties": {
+            "request": { "$ref": "#/definitions/request" },
+            "response": {
+                "oneOf": [
+                    { "$ref": "#/definitions/response" },
+                    { "$ref": "#/definitions/redirectResponse" },
+                    { "$ref": "#/definitions/passthroughResponse" }
+                ]
+            }
+        }
+    }
+},
+"type": "object",
+"required": ["entries"],
+    "properties": {
+    "version": { "type": "string", "enum": ["1.2", "1.2.0"] },
+    "creator": { "type": "string" },
+        "entries": {
+            "type": "array",
+            "items": { "$ref": "#/definitions/entry" }
+        }
+    }
+}
